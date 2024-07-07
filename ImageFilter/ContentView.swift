@@ -52,6 +52,8 @@ struct ContentView: View {
   @State private var rgbValues: String = "RGB: N/A"
   @State private var position: NSPoint = .zero
   
+  private let imagePixelReader: ImagePixelReader = ImagePixelReader()
+  
   var body: some View {
     NavigationView {
       // 左侧控制面板
@@ -91,7 +93,12 @@ struct ContentView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }.onChange(of: position) { newPosition in
               let convertedPosition = convertMousePosition(newPosition, in: geometry.size, for: image)
-              rgbValues = convertedPosition.debugDescription
+              
+              if let pixelColor = imagePixelReader.getPixelColor(at: convertedPosition) {
+                rgbValues = String(format: "RGB: (%d, %d, %d)", Int(pixelColor.red * 255), Int(pixelColor.green * 255), Int(pixelColor.blue * 255))
+              } else {
+                rgbValues = "RGB: N/A"
+              }
             }
           }
         } else {
@@ -115,6 +122,9 @@ struct ContentView: View {
     if panel.runModal() == .OK {
       if let url = panel.url {
         image = NSImage(contentsOf: url)
+        if let image {
+          imagePixelReader.loadImage(image)
+        }
       }
     }
   }

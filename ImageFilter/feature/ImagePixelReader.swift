@@ -15,38 +15,39 @@ class ImagePixelReader {
   private let pipelineState: MTLComputePipelineState
   private var texture: MTLTexture?
   
-  init?() {
+  init() {
     guard let device = MTLCreateSystemDefaultDevice(),
           let commandQueue = device.makeCommandQueue() else {
-      return nil
+      fatalError("can not use metal!")
     }
     
     self.device = device
     self.commandQueue = commandQueue
     
-    let kernelSource = """
-    kernel void getPixelColor(texture2d<float, access::read> inTexture [[texture(0)]],
-                              device float4 *outColor [[buffer(0)]],
-                              constant uint2 *position [[buffer(1)]])
-    {
-        *outColor = inTexture.read(*position);
-    }
-    """
     
-    let library = try! device.makeLibrary(source: kernelSource, options: nil)
+    let library = device.makeDefaultLibrary()!
     let kernelFunction = library.makeFunction(name: "getPixelColor")!
     
     do {
       pipelineState = try device.makeComputePipelineState(function: kernelFunction)
     } catch {
       print("Unable to create pipeline state: \(error)")
-      return nil
+      fatalError("can not use metal!")
     }
   }
   
   func loadImage(_ image: CGImage) {
     let textureLoader = MTKTextureLoader(device: device)
     texture = try? textureLoader.newTexture(cgImage: image, options: [.textureUsage: MTLTextureUsage.shaderRead.rawValue as NSNumber])
+  }
+  
+  func loadImage(_ image: NSImage) {
+    loadImage(convertToCGImage(image)!)
+  }
+  
+  func convertToCGImage(_ nsImage: NSImage) -> CGImage? {
+    var imageRect = CGRect(x: 0, y: 0, width: nsImage.size.width, height: nsImage.size.height)
+    return nsImage.cgImage(forProposedRect: &imageRect, context: nil, hints: nil)
   }
   
   func getPixelColor(at point: CGPoint) -> (red: Float, green: Float, blue: Float)? {
