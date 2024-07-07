@@ -58,24 +58,24 @@ struct ContentView: View {
     NavigationView {
       // 左侧控制面板
       List {
-        Button("读取图片") {
+        Button("Load") {
           openImage()
         }
         
-        Button("保存图片") {
+        Button("Save") {
           saveImage()
         }
         
-        Section(header: Text("调整")) {
-          Slider(value: $brightness, in: -1...1, step: 0.1) {
-            Text("亮度")
+        Section(header: Text("adjust")) {
+          Slider(value: $brightness, in: -1...1, step: 0.0) {
+            Text("Brightness")
           }
           
-          Toggle("灰度", isOn: $isGrayscale)
+          Toggle("Gray", isOn: $isGrayscale)
         }
       }
       .frame(minWidth: 200, idealWidth: 250, maxWidth: 300)
-      .navigationTitle("控制面板")
+      .navigationTitle("Control")
       
       // 右侧图片显示
       VStack {
@@ -102,13 +102,13 @@ struct ContentView: View {
             }
           }
         } else {
-          Text("没有选择图片")
+          Text("Load image to show here.")
         }
         
         Text(rgbValues).padding()
       }
       .frame(minWidth: 300, idealWidth: 500)
-      .navigationTitle("图片预览")
+      .navigationTitle("Image Preview")
     }
   }
   
