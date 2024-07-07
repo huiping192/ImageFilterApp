@@ -8,6 +8,11 @@
 import Foundation
 import MetalKit
 
+enum GrayType: String, CaseIterable, Identifiable {
+    case none, standard, luminance, desaturation
+    var id: Self { self }
+}
+
 class GrayscaleFilter {
   private let device: MTLDevice
   private let commandQueue: MTLCommandQueue
@@ -48,8 +53,23 @@ class GrayscaleFilter {
     return nsImage.cgImage(forProposedRect: &imageRect, context: nil, hints: nil)
   }
   
-  func makeGrayImage() -> NSImage? {
-    guard let texture = texture else { return nil }
+  func makeStandardGrayImage () -> NSImage? {
+    guard let outputTexture = makeGray() else {
+      return nil
+    }
+    
+    return convertTextureToUIImage(outputTexture)
+  }
+  
+  func makeLuminanceGrayImage () -> NSImage? {
+    guard let outputTexture = makeGray() else {
+      return nil
+    }
+    
+    return convertTextureToUIImage(outputTexture)
+  }
+  
+  func makeDesaturationGrayImage () -> NSImage? {
     guard let outputTexture = makeGray() else {
       return nil
     }

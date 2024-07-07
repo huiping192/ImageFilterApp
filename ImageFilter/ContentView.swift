@@ -47,10 +47,11 @@ struct MouseTrackingNSView: NSViewRepresentable {
 
 struct ContentView: View {
   @State private var image: NSImage?
+  @State private var originImage: NSImage?
   @State private var brightness: Double = 0
-  @State private var isGrayscale: Bool = false
   @State private var rgbValues: String = "RGB: N/A"
   @State private var position: NSPoint = .zero
+  @State private var selectedGrayType: GrayType = .none
   
   private let imagePixelReader: ImagePixelReader = ImagePixelReader()
   private let grayscaleFilter = GrayscaleFilter()
@@ -59,29 +60,37 @@ struct ContentView: View {
     NavigationView {
       // 左侧控制面板
       List {
-        Button("Load") {
-          openImage()
+        Section(header: Text("Image Actions")) {
+          Button("Load Image", action: openImage)
+          Button("Save Image", action: saveImage)
         }
         
-        Button("Save") {
-          saveImage()
-        }
-        
-        Section(header: Text("adjust")) {
-          Slider(value: $brightness, in: -1...1, step: 0.01) {
-            Text("Brightness")
-          }
-          .onChange(of: brightness) { _ in
-            
+        Section(header: Text("Adjustments")) {
+          VStack(alignment: .leading) {
+            Text("Brightness: \(brightness, specifier: "%.2f")")
+            Slider(value: $brightness, in: -1...1, step: 0.01)
+              .onChange(of: brightness) { _ in
+                updateImage()
+              }
           }
           
-          Toggle("Gray", isOn: $isGrayscale).onChange(of: isGrayscale) { _ in
-            image = grayscaleFilter.makeGrayImage()
+          VStack(alignment: .leading) {
+            Text("Grayscale Type")
+            Picker("", selection: $selectedGrayType) {
+              ForEach(GrayType.allCases) { grayType in
+                Text(grayType.rawValue.capitalized).tag(grayType)
+              }
+            }
+            .pickerStyle(RadioGroupPickerStyle())
+            .onChange(of: selectedGrayType) { _ in
+              updateImage()
+            }
           }
         }
       }
+      .listStyle(SidebarListStyle())
       .frame(minWidth: 200, idealWidth: 250, maxWidth: 300)
-      .navigationTitle("Control")
+      .navigationTitle("Image Editor")
       
       // 右侧图片显示
       VStack {
@@ -116,6 +125,20 @@ struct ContentView: View {
     }
   }
   
+  func updateImage() {
+    switch selectedGrayType {
+    case .standard:
+      image = grayscaleFilter.makeStandardGrayImage()
+    case .luminance:
+      image = grayscaleFilter.makeLuminanceGrayImage()
+    case .desaturation:
+      image = grayscaleFilter.makeDesaturationGrayImage()
+    case .none:
+      image = originImage
+    }
+  }
+  
+  
   func openImage() {
     let panel = NSOpenPanel()
     panel.allowsMultipleSelection = false
@@ -126,6 +149,7 @@ struct ContentView: View {
     if panel.runModal() == .OK {
       if let url = panel.url {
         image = NSImage(contentsOf: url)
+        originImage = image
         if let image {
           imagePixelReader.loadImage(image)
           grayscaleFilter.loadImage(image)
