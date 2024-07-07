@@ -53,7 +53,8 @@ struct ContentView: View {
   @State private var position: NSPoint = .zero
   
   private let imagePixelReader: ImagePixelReader = ImagePixelReader()
-  
+  private let grayscaleFilter = GrayscaleFilter()
+
   var body: some View {
     NavigationView {
       // 左侧控制面板
@@ -67,11 +68,16 @@ struct ContentView: View {
         }
         
         Section(header: Text("adjust")) {
-          Slider(value: $brightness, in: -1...1, step: 0.0) {
+          Slider(value: $brightness, in: -1...1, step: 0.01) {
             Text("Brightness")
           }
+          .onChange(of: brightness) { _ in
+            
+          }
           
-          Toggle("Gray", isOn: $isGrayscale)
+          Toggle("Gray", isOn: $isGrayscale).onChange(of: isGrayscale) { _ in
+            image = grayscaleFilter.makeGrayImage()
+          }
         }
       }
       .frame(minWidth: 200, idealWidth: 250, maxWidth: 300)
@@ -85,8 +91,6 @@ struct ContentView: View {
               Image(nsImage: image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .brightness(brightness)
-                .grayscale(isGrayscale ? 1 : 0)
               
               MouseTrackingNSView(position: $position)
                 .background(Color.clear)
@@ -124,6 +128,7 @@ struct ContentView: View {
         image = NSImage(contentsOf: url)
         if let image {
           imagePixelReader.loadImage(image)
+          grayscaleFilter.loadImage(image)
         }
       }
     }
