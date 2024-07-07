@@ -131,6 +131,8 @@ struct ContentView: View {
     } else {
       image = originImage
     }
+    
+    imagePixelReader.loadImage(image!)
   }
   
   func openImage() {
