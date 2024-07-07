@@ -9,14 +9,18 @@ import Foundation
 import MetalKit
 
 enum GrayType: String, CaseIterable, Identifiable {
-    case none, standard, luminance, desaturation
+    case none, averaging, luminance, desaturation
     var id: Self { self }
 }
 
+// https://github.com/nifei/memo/blob/master/Grayscale/grayscale.md
 class GrayscaleFilter {
   private let device: MTLDevice
   private let commandQueue: MTLCommandQueue
-  private let pipelineState: MTLComputePipelineState
+  private let averagingPipelineState: MTLComputePipelineState
+  private let luminancePipelineState: MTLComputePipelineState
+  private let desaturationPipelineState: MTLComputePipelineState
+
   private var texture: MTLTexture?
   
   init() {
@@ -28,14 +32,23 @@ class GrayscaleFilter {
     self.device = device
     self.commandQueue = commandQueue
     
-    
     let library = device.makeDefaultLibrary()!
-    let kernelFunction = library.makeFunction(name: "makeGray")!
+    let averagingFunction = library.makeFunction(name: "makeAveragingGray")!
+    let luminanceFunction = library.makeFunction(name: "makeLuminanceGray")!
+    let desaturationFunction = library.makeFunction(name: "makeDesaturationGray")!
     
     do {
-      pipelineState = try device.makeComputePipelineState(function: kernelFunction)
+      let averagingPipelineState = try device.makeComputePipelineState(function: averagingFunction)
+      let luminancePipelineState = try device.makeComputePipelineState(function: luminanceFunction)
+      let desaturationPipelineState = try device.makeComputePipelineState(function: desaturationFunction)
+      
+      // 将这些 pipelineState 存储在适当的地方，比如结构体或类的属性中
+      self.averagingPipelineState = averagingPipelineState
+      self.luminancePipelineState = luminancePipelineState
+      self.desaturationPipelineState = desaturationPipelineState
+      
     } catch {
-      fatalError("Unable to create pipeline state: \(error)")
+      fatalError("Unable to create pipeline states: \(error)")
     }
   }
   
@@ -53,31 +66,18 @@ class GrayscaleFilter {
     return nsImage.cgImage(forProposedRect: &imageRect, context: nil, hints: nil)
   }
   
-  func makeStandardGrayImage () -> NSImage? {
-    guard let outputTexture = makeGray() else {
+  func makeGrayImage (grayType: GrayType) -> NSImage? {
+    guard grayType != .none else {
+      return nil
+    }
+    guard let outputTexture = makeGray(grayType: grayType) else {
       return nil
     }
     
     return convertTextureToUIImage(outputTexture)
   }
   
-  func makeLuminanceGrayImage () -> NSImage? {
-    guard let outputTexture = makeGray() else {
-      return nil
-    }
-    
-    return convertTextureToUIImage(outputTexture)
-  }
-  
-  func makeDesaturationGrayImage () -> NSImage? {
-    guard let outputTexture = makeGray() else {
-      return nil
-    }
-    
-    return convertTextureToUIImage(outputTexture)
-  }
-  
-  private func makeGray() -> MTLTexture? {
+  private func makeGray(grayType: GrayType) -> MTLTexture? {
     guard let texture else { return nil }
     guard let outputTexture = makeOutputTexture(matchingInput: texture) else {
       return nil
@@ -88,6 +88,17 @@ class GrayscaleFilter {
       return nil
     }
     
+    let pipelineState: MTLComputePipelineState
+    switch grayType {
+    case .none:
+      return nil
+    case .averaging:
+      pipelineState = averagingPipelineState
+    case .luminance:
+      pipelineState = luminancePipelineState
+    case .desaturation:
+      pipelineState = desaturationPipelineState
+    }
     computeEncoder.setComputePipelineState(pipelineState)
     computeEncoder.setTexture(texture, index: 0)
     computeEncoder.setTexture(outputTexture, index: 1)

@@ -126,18 +126,12 @@ struct ContentView: View {
   }
   
   func updateImage() {
-    switch selectedGrayType {
-    case .standard:
-      image = grayscaleFilter.makeStandardGrayImage()
-    case .luminance:
-      image = grayscaleFilter.makeLuminanceGrayImage()
-    case .desaturation:
-      image = grayscaleFilter.makeDesaturationGrayImage()
-    case .none:
+    if let grayImage = grayscaleFilter.makeGrayImage(grayType: selectedGrayType) {
+      image = grayImage
+    } else {
       image = originImage
     }
   }
-  
   
   func openImage() {
     let panel = NSOpenPanel()
