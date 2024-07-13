@@ -7,44 +7,6 @@
 
 import SwiftUI
 
-
-class MouseTrackingView: NSView {
-  var mouseMovedCallback: ((NSPoint) -> Void)?
-  
-  override func mouseMoved(with event: NSEvent) {
-    super.mouseMoved(with: event)
-    let location = convert(event.locationInWindow, from: nil)
-    mouseMovedCallback?(location)
-  }
-  
-  override func updateTrackingAreas() {
-    super.updateTrackingAreas()
-    
-    for area in trackingAreas {
-      removeTrackingArea(area)
-    }
-    
-    let trackingArea = NSTrackingArea(rect: bounds, options: [.mouseMoved, .activeInKeyWindow], owner: self, userInfo: nil)
-    addTrackingArea(trackingArea)
-  }
-}
-
-struct MouseTrackingNSView: NSViewRepresentable {
-  @Binding var position: NSPoint
-  
-  func makeNSView(context: Context) -> MouseTrackingView {
-    let view = MouseTrackingView()
-    view.mouseMovedCallback = { point in
-      DispatchQueue.main.async {
-        self.position = point
-      }
-    }
-    return view
-  }
-  
-  func updateNSView(_ nsView: MouseTrackingView, context: Context) {}
-}
-
 struct ContentView: View {
   @State private var image: NSImage?
   @State private var originImage: NSImage?
@@ -54,7 +16,7 @@ struct ContentView: View {
   @State private var selectedGrayType: GrayType = .none
   
   private let imagePixelReader: ImagePixelReader = ImagePixelReader()
-  private let grayscaleFilter = GrayscaleFilter()
+  private let filterClient = FilterClient()
 
   var body: some View {
     NavigationView {
@@ -126,8 +88,9 @@ struct ContentView: View {
   }
   
   func updateImage() {
-    if let grayImage = grayscaleFilter.makeGrayImage(grayType: selectedGrayType) {
-      image = grayImage
+    filterClient.toggleGray(grayType: selectedGrayType)
+    if let newImage = filterClient.applyFilters() {
+      image = newImage
     } else {
       image = originImage
     }
@@ -148,7 +111,7 @@ struct ContentView: View {
         originImage = image
         if let image {
           imagePixelReader.loadImage(image)
-          grayscaleFilter.loadImage(image)
+          filterClient.loadImage(image)
         }
       }
     }

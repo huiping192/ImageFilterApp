@@ -8,10 +8,7 @@
 import Foundation
 import MetalKit
 
-enum GrayType: String, CaseIterable, Identifiable {
-    case none, averaging, luminance, desaturation
-    var id: Self { self }
-}
+
 
 // https://github.com/nifei/memo/blob/master/Grayscale/grayscale.md
 class GrayscaleFilter {
