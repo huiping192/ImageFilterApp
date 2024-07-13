@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
   @State private var image: NSImage?
   @State private var originImage: NSImage?
-  @State private var brightness: Double = 0
+  @State private var brightness: Float = 0
   @State private var rgbValues: String = "RGB: N/A"
   @State private var position: NSPoint = .zero
   @State private var selectedGrayType: GrayType = .none
@@ -89,6 +89,7 @@ struct ContentView: View {
   
   func updateImage() {
     filterClient.toggleGray(grayType: selectedGrayType)
+    filterClient.adjustbrightness(value: brightness)
     if let newImage = filterClient.applyFilters() {
       image = newImage
     } else {

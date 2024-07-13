@@ -21,6 +21,7 @@ class FilterClient {
   private var averagingFilter: AveragingGrayFilter?
   private var luminanceFilter: LuminanceGrayFilter?
   private var desaturationFilter: DesaturationGrayFilter?
+  private var brightnessFilter: BrightnessFilter?
   
   init() {
     guard let device = MTLCreateSystemDefaultDevice() else {
@@ -60,6 +61,15 @@ class FilterClient {
       toggleLuminanceGray(isOn: false)
       toggleDesaturationGray(isOn: true)
     }
+  }
+  
+  func adjustbrightness(value: Float) {
+    if brightnessFilter == nil {
+      brightnessFilter = BrightnessFilter(device: device, brightness: value)
+      filterChain.add(filter: brightnessFilter)
+    }
+    
+    brightnessFilter?.brightness = value
   }
   
   

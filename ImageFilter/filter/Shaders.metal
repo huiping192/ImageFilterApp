@@ -58,3 +58,18 @@ kernel void makeDesaturationGray(texture2d<float, access::read> inTexture [[text
   
   outTexture.write(float4(gray, gray, gray, color.a), gid);
 }
+
+
+kernel void adjustBrightness(texture2d<float, access::read> inTexture [[texture(0)]],
+                              texture2d<float, access::write> outTexture [[texture(1)]],
+                              constant float &brightness [[ buffer(0) ]],
+                              uint2 gid [[thread_position_in_grid]]) {
+  if (gid.x >= inTexture.get_width() || gid.y >= inTexture.get_height()) {
+    return;
+  }
+  
+  float4 color = inTexture.read(gid);
+  // alpha channel is not changed
+  color.rgb += brightness;
+  outTexture.write(color, gid);
+}
