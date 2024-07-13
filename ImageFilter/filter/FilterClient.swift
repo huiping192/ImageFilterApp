@@ -63,7 +63,7 @@ class FilterClient {
     }
   }
   
-  func adjustbrightness(value: Float) {
+  func adjustBrightness(value: Float) {
     if brightnessFilter == nil {
       brightnessFilter = BrightnessFilter(device: device, brightness: value)
       filterChain.add(filter: brightnessFilter)

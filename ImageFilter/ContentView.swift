@@ -89,7 +89,7 @@ struct ContentView: View {
   
   func updateImage() {
     filterClient.toggleGray(grayType: selectedGrayType)
-    filterClient.adjustbrightness(value: brightness)
+    filterClient.adjustBrightness(value: brightness)
     if let newImage = filterClient.applyFilters() {
       image = newImage
     } else {
