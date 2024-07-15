@@ -17,6 +17,7 @@
 		DC8259502C3ED4B70080D980 /* DesaturationGrayFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC82594F2C3ED4B70080D980 /* DesaturationGrayFilter.swift */; };
 		DC8259522C3ED5E20080D980 /* MouseTrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8259512C3ED5E20080D980 /* MouseTrackingView.swift */; };
 		DC8259542C3ED7750080D980 /* FilterClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8259532C3ED7750080D980 /* FilterClient.swift */; };
+		DC8259562C4514830080D980 /* SaturationFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8259552C4514830080D980 /* SaturationFilter.swift */; };
 		DCFB3CD42C383924008B4F54 /* ImageFilterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFB3CD32C383924008B4F54 /* ImageFilterApp.swift */; };
 		DCFB3CD62C383924008B4F54 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFB3CD52C383924008B4F54 /* ContentView.swift */; };
 		DCFB3CD82C383925008B4F54 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCFB3CD72C383925008B4F54 /* Assets.xcassets */; };
@@ -35,6 +36,7 @@
 		DC82594F2C3ED4B70080D980 /* DesaturationGrayFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesaturationGrayFilter.swift; sourceTree = "<group>"; };
 		DC8259512C3ED5E20080D980 /* MouseTrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseTrackingView.swift; sourceTree = "<group>"; };
 		DC8259532C3ED7750080D980 /* FilterClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterClient.swift; sourceTree = "<group>"; };
+		DC8259552C4514830080D980 /* SaturationFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaturationFilter.swift; sourceTree = "<group>"; };
 		DCFB3CD02C383924008B4F54 /* ImageFilter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFilter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCFB3CD32C383924008B4F54 /* ImageFilterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFilterApp.swift; sourceTree = "<group>"; };
 		DCFB3CD52C383924008B4F54 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -55,6 +57,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC8259572C45148B0080D980 /* subFilter */ = {
+			isa = PBXGroup;
+			children = (
+				DC8259552C4514830080D980 /* SaturationFilter.swift */,
+				DC8259492C3ED2490080D980 /* BrightnessFilter.swift */,
+				DC82594B2C3ED4730080D980 /* AveragingGrayFilter.swift */,
+				DC82594D2C3ED49A0080D980 /* LuminanceGrayFilter.swift */,
+				DC82594F2C3ED4B70080D980 /* DesaturationGrayFilter.swift */,
+			);
+			path = subFilter;
+			sourceTree = "<group>";
+		};
 		DCFB3CC72C383924008B4F54 = {
 			isa = PBXGroup;
 			children = (
@@ -97,14 +111,11 @@
 		DCFB3CE22C383980008B4F54 /* filter */ = {
 			isa = PBXGroup;
 			children = (
+				DC8259572C45148B0080D980 /* subFilter */,
 				DCFB3CE32C384CA4008B4F54 /* ImagePixelReader.swift */,
 				DC82593F2C3ABD2E0080D980 /* Shaders.metal */,
 				DC8259452C3B65F90080D980 /* Filter.swift */,
 				DC8259472C3ED1B70080D980 /* FilterChain.swift */,
-				DC8259492C3ED2490080D980 /* BrightnessFilter.swift */,
-				DC82594B2C3ED4730080D980 /* AveragingGrayFilter.swift */,
-				DC82594D2C3ED49A0080D980 /* LuminanceGrayFilter.swift */,
-				DC82594F2C3ED4B70080D980 /* DesaturationGrayFilter.swift */,
 				DC8259532C3ED7750080D980 /* FilterClient.swift */,
 			);
 			path = filter;
@@ -191,6 +202,7 @@
 				DC8259442C3AD0300080D980 /* Help.swift in Sources */,
 				DC8259502C3ED4B70080D980 /* DesaturationGrayFilter.swift in Sources */,
 				DCFB3CE42C384CA4008B4F54 /* ImagePixelReader.swift in Sources */,
+				DC8259562C4514830080D980 /* SaturationFilter.swift in Sources */,
 				DC8259482C3ED1B70080D980 /* FilterChain.swift in Sources */,
 				DCFB3CD42C383924008B4F54 /* ImageFilterApp.swift in Sources */,
 			);

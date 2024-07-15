@@ -11,6 +11,7 @@ struct ContentView: View {
   @State private var image: NSImage?
   @State private var originImage: NSImage?
   @State private var brightness: Float = 0
+  @State private var saturation: Float = 1
   @State private var rgbValues: String = "RGB: N/A"
   @State private var position: NSPoint = .zero
   @State private var selectedGrayType: GrayType = .none
@@ -32,6 +33,14 @@ struct ContentView: View {
             Text("Brightness: \(brightness, specifier: "%.2f")")
             Slider(value: $brightness, in: -1...1, step: 0.01)
               .onChange(of: brightness) { _ in
+                updateImage()
+              }
+          }
+          
+          VStack(alignment: .leading) {
+            Text("Saturation: \(saturation, specifier: "%.2f")")
+            Slider(value: $saturation, in: 0...2, step: 0.01)
+              .onChange(of: saturation) { _ in
                 updateImage()
               }
           }
@@ -90,6 +99,7 @@ struct ContentView: View {
   func updateImage() {
     filterClient.toggleGray(grayType: selectedGrayType)
     filterClient.adjustBrightness(value: brightness)
+    filterClient.adjustSaturation(value: saturation)
     if let newImage = filterClient.applyFilters() {
       image = newImage
     } else {

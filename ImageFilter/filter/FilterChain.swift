@@ -33,7 +33,7 @@ class FilterChain {
     guard !filters.isEmpty else { return inputTexture }
     
     var currentTexture = inputTexture
-    var outputTexture = makeOutputTexture(matchingInput: currentTexture)
+    let outputTexture = makeOutputTexture(matchingInput: currentTexture)
 
     let commandBuffer = commandQueue.makeCommandBuffer()!
     

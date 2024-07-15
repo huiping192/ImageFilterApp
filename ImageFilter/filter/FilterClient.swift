@@ -22,7 +22,8 @@ class FilterClient {
   private var luminanceFilter: LuminanceGrayFilter?
   private var desaturationFilter: DesaturationGrayFilter?
   private var brightnessFilter: BrightnessFilter?
-  
+  private var saturationFilter: SaturationFilter?
+
   init() {
     guard let device = MTLCreateSystemDefaultDevice() else {
       fatalError("Metal is not supported on this device")
@@ -72,6 +73,14 @@ class FilterClient {
     brightnessFilter?.brightness = value
   }
   
+  func adjustSaturation(value: Float) {
+    if saturationFilter == nil {
+      saturationFilter = SaturationFilter(device: device, saturation: value)
+      filterChain.add(filter: saturationFilter)
+    }
+    
+    saturationFilter?.saturation = value
+  }
   
   private func toggleAveragingGray(isOn: Bool) {
     if isOn {

@@ -73,3 +73,25 @@ kernel void adjustBrightness(texture2d<float, access::read> inTexture [[texture(
   color.rgb += brightness;
   outTexture.write(color, gid);
 }
+
+
+
+kernel void adjustSaturationRGB(texture2d<float, access::read> inTexture [[texture(0)]],
+                                texture2d<float, access::write> outTexture [[texture(1)]],
+                                constant float &saturationFactor [[buffer(0)]],
+                                uint2 gid [[thread_position_in_grid]])
+{
+    if (gid.x >= outTexture.get_width() || gid.y >= outTexture.get_height()) {
+        return;
+    }
+
+    float4 inColor = inTexture.read(gid);
+
+    // 计算灰度值 (使用 Rec. 601 标准)
+    float luminance = dot(inColor.rgb, float3(0.299, 0.587, 0.114));
+
+    // 调整饱和度
+    float3 adjustedColor = mix(float3(luminance), inColor.rgb, saturationFactor);
+
+    outTexture.write(float4(adjustedColor, inColor.a), gid);
+}
