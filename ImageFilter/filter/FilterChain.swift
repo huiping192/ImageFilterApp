@@ -55,7 +55,7 @@ class FilterChain {
     let textureDescriptor = MTLTextureDescriptor()
     
     textureDescriptor.textureType = texture.textureType
-    textureDescriptor.pixelFormat = .rgba8Unorm
+    textureDescriptor.pixelFormat = texture.pixelFormat
     textureDescriptor.width = texture.width
     textureDescriptor.height = texture.height
     textureDescriptor.depth = texture.depth
