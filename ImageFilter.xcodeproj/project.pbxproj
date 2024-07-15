@@ -18,6 +18,7 @@
 		DC8259522C3ED5E20080D980 /* MouseTrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8259512C3ED5E20080D980 /* MouseTrackingView.swift */; };
 		DC8259542C3ED7750080D980 /* FilterClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8259532C3ED7750080D980 /* FilterClient.swift */; };
 		DC8259562C4514830080D980 /* SaturationFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8259552C4514830080D980 /* SaturationFilter.swift */; };
+		DC8259592C45640B0080D980 /* ContrastFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8259582C45640B0080D980 /* ContrastFilter.swift */; };
 		DCFB3CD42C383924008B4F54 /* ImageFilterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFB3CD32C383924008B4F54 /* ImageFilterApp.swift */; };
 		DCFB3CD62C383924008B4F54 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFB3CD52C383924008B4F54 /* ContentView.swift */; };
 		DCFB3CD82C383925008B4F54 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCFB3CD72C383925008B4F54 /* Assets.xcassets */; };
@@ -37,6 +38,7 @@
 		DC8259512C3ED5E20080D980 /* MouseTrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseTrackingView.swift; sourceTree = "<group>"; };
 		DC8259532C3ED7750080D980 /* FilterClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterClient.swift; sourceTree = "<group>"; };
 		DC8259552C4514830080D980 /* SaturationFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaturationFilter.swift; sourceTree = "<group>"; };
+		DC8259582C45640B0080D980 /* ContrastFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastFilter.swift; sourceTree = "<group>"; };
 		DCFB3CD02C383924008B4F54 /* ImageFilter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFilter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCFB3CD32C383924008B4F54 /* ImageFilterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFilterApp.swift; sourceTree = "<group>"; };
 		DCFB3CD52C383924008B4F54 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 				DC82594B2C3ED4730080D980 /* AveragingGrayFilter.swift */,
 				DC82594D2C3ED49A0080D980 /* LuminanceGrayFilter.swift */,
 				DC82594F2C3ED4B70080D980 /* DesaturationGrayFilter.swift */,
+				DC8259582C45640B0080D980 /* ContrastFilter.swift */,
 			);
 			path = subFilter;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 			files = (
 				DC8259402C3ABD2E0080D980 /* Shaders.metal in Sources */,
 				DC82594E2C3ED49A0080D980 /* LuminanceGrayFilter.swift in Sources */,
+				DC8259592C45640B0080D980 /* ContrastFilter.swift in Sources */,
 				DC8259542C3ED7750080D980 /* FilterClient.swift in Sources */,
 				DC8259522C3ED5E20080D980 /* MouseTrackingView.swift in Sources */,
 				DC82594C2C3ED4730080D980 /* AveragingGrayFilter.swift in Sources */,

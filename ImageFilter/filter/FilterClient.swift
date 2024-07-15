@@ -23,6 +23,7 @@ class FilterClient {
   private var desaturationFilter: DesaturationGrayFilter?
   private var brightnessFilter: BrightnessFilter?
   private var saturationFilter: SaturationFilter?
+  private var contrastFilter: ContrastFilter?
 
   init() {
     guard let device = MTLCreateSystemDefaultDevice() else {
@@ -86,6 +87,15 @@ class FilterClient {
     saturationFilter?.saturation = value
   }
   
+  func adjustContrast(value: Float) {
+    if contrastFilter == nil {
+      contrastFilter = ContrastFilter(device: device, contrast: value)
+      filterChain.add(filter: contrastFilter)
+    }
+    
+    contrastFilter?.contrast = value
+  }
+  
   private func toggleAveragingGray(isOn: Bool) {
     if isOn {
       if averagingFilter == nil {
@@ -98,7 +108,7 @@ class FilterClient {
       }
     }
   }
-  
+    
   private func toggleLuminanceGray(isOn: Bool) {
     if isOn {
       if luminanceFilter == nil {

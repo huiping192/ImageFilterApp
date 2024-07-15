@@ -95,3 +95,33 @@ kernel void adjustSaturationRGB(texture2d<float, access::read> inTexture [[textu
 
     outTexture.write(float4(adjustedColor, inColor.a), gid);
 }
+
+
+kernel void adjustContrast(texture2d<float, access::read> inTexture [[texture(0)]],
+                           texture2d<float, access::write> outTexture [[texture(1)]],
+                           constant float &contrast [[buffer(0)]],
+                           uint2 gid [[thread_position_in_grid]])
+{
+    // 确保我们没有超出纹理边界
+    if (gid.x >= outTexture.get_width() || gid.y >= outTexture.get_height()) {
+        return;
+    }
+    
+    // 读取输入颜色
+    float4 color = inTexture.read(gid);
+    
+    float mappedContrast = contrast * 255.0;
+
+    // 计算对比度因子
+    float factor = (259.0 * (mappedContrast + 255.0)) / (255.0 * (259.0 - mappedContrast));
+    
+    // 应用对比度调整
+    float3 adjustedColor = float3(
+        clamp(factor * (color.r - 0.5) + 0.5, 0.0, 1.0),
+        clamp(factor * (color.g - 0.5) + 0.5, 0.0, 1.0),
+        clamp(factor * (color.b - 0.5) + 0.5, 0.0, 1.0)
+    );
+    
+    // 写入调整后的颜色，保持原始的 alpha 值
+    outTexture.write(float4(adjustedColor, color.a), gid);
+}
