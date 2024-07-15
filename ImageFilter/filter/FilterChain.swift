@@ -52,12 +52,19 @@ class FilterChain {
   }
   
   private func makeOutputTexture(matchingInput texture: MTLTexture) -> MTLTexture {
-    let descriptor = MTLTextureDescriptor.texture2DDescriptor(
-      pixelFormat: .rgba8Unorm,
-      width: texture.width,
-      height: texture.height,
-      mipmapped: false)
-    descriptor.usage = [.shaderWrite, .shaderRead]
-    return device.makeTexture(descriptor: descriptor)!
+    let textureDescriptor = MTLTextureDescriptor()
+    
+    textureDescriptor.textureType = texture.textureType
+    textureDescriptor.pixelFormat = .rgba8Unorm
+    textureDescriptor.width = texture.width
+    textureDescriptor.height = texture.height
+    textureDescriptor.depth = texture.depth
+    textureDescriptor.mipmapLevelCount = texture.mipmapLevelCount
+    textureDescriptor.sampleCount = texture.sampleCount
+    textureDescriptor.arrayLength = texture.arrayLength
+    
+    textureDescriptor.usage = [.shaderWrite, .shaderRead]
+    
+    return device.makeTexture(descriptor: textureDescriptor)!
   }
 }

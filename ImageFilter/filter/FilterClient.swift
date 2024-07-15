@@ -39,7 +39,11 @@ class FilterClient {
     }
     
     let textureLoader = MTKTextureLoader(device: device)
-    inputTexture = try? textureLoader.newTexture(cgImage: cgImage, options: [.textureUsage: MTLTextureUsage.shaderRead.rawValue as NSNumber])
+    inputTexture = try? textureLoader.newTexture(cgImage: cgImage, options: [
+        .SRGB: false,
+        .generateMipmaps: false,
+        .textureUsage: MTLTextureUsage.shaderRead.rawValue as NSNumber
+    ])
   }
   
   
