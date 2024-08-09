@@ -87,7 +87,7 @@ struct ContentView: View {
             }.onChange(of: position) { newPosition in
               let convertedPosition = convertMousePosition(newPosition, in: geometry.size, for: image)
               
-              if let pixelColor = imagePixelReader.getPixelColor(at: convertedPosition) {
+              if let pixelColor = imagePixelReader.getPixelColor(at: convertedPosition, useGPU: false) {
                 rgbValues = String(format: "RGB: (%d, %d, %d)", Int(pixelColor.red * 255), Int(pixelColor.green * 255), Int(pixelColor.blue * 255))
               } else {
                 rgbValues = "RGB: N/A"

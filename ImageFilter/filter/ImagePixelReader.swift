@@ -9,7 +9,70 @@ import Foundation
 import MetalKit
 import CoreGraphics
 
+protocol ImagePixelReadable {
+  func loadImage(_ image: CGImage)
+  func getPixelColor(at point: CGPoint) -> (red: Float, green: Float, blue: Float)?
+}
+
+
 class ImagePixelReader {
+  
+  private let cpuImagePixelReader = CPUImagePixelReader()
+  private let gpuImagePixelReader = GPUImagePixelReader()
+  
+  
+  func loadImage(_ image: NSImage) {
+    guard let cgImage = convertToCGImage(image) else { return }
+    cpuImagePixelReader.loadImage(cgImage)
+    gpuImagePixelReader.loadImage(cgImage)
+  }
+  
+  func getPixelColor(at point: CGPoint, useGPU: Bool = true) -> (red: Float, green: Float, blue: Float)? {
+    if useGPU {
+      return gpuImagePixelReader.getPixelColor(at: point)
+    } else {
+      return cpuImagePixelReader.getPixelColor(at: point)
+    }
+  }
+}
+
+private func convertToCGImage(_ nsImage: NSImage) -> CGImage? {
+  var imageRect = CGRect(x: 0, y: 0, width: nsImage.size.width, height: nsImage.size.height)
+  return nsImage.cgImage(forProposedRect: &imageRect, context: nil, hints: nil)
+}
+
+
+
+private class CPUImagePixelReader: ImagePixelReadable {
+  private var image: CGImage?
+  
+  func loadImage(_ image: CGImage) {
+    self.image = image
+  }
+  
+  func getPixelColor(at point: CGPoint) -> (red: Float, green: Float, blue: Float)? {
+    guard let image = image else { return nil }
+    guard let dataProvider = image.dataProvider,
+          let data = dataProvider.data,
+          let pointer = CFDataGetBytePtr(data) else {
+      return nil
+    }
+    
+//    let width = image.width
+//    let height = image.height
+    let bytesPerPixel = image.bitsPerPixel / 8
+    let bytesPerRow = image.bytesPerRow
+    let pixelInfo = Int(point.y) * bytesPerRow + Int(point.x) * bytesPerPixel
+    
+    let red = Float(pointer[pixelInfo]) / 255.0
+    let green = Float(pointer[pixelInfo + 1]) / 255.0
+    let blue = Float(pointer[pixelInfo + 2]) / 255.0
+    
+    return (red: red, green: green, blue: blue)
+  }
+}
+
+private class GPUImagePixelReader {
   private let device: MTLDevice
   private let commandQueue: MTLCommandQueue
   private let pipelineState: MTLComputePipelineState
@@ -39,15 +102,6 @@ class ImagePixelReader {
   func loadImage(_ image: CGImage) {
     let textureLoader = MTKTextureLoader(device: device)
     texture = try? textureLoader.newTexture(cgImage: image, options: [.textureUsage: MTLTextureUsage.shaderRead.rawValue as NSNumber])
-  }
-  
-  func loadImage(_ image: NSImage) {
-    loadImage(convertToCGImage(image)!)
-  }
-  
-  func convertToCGImage(_ nsImage: NSImage) -> CGImage? {
-    var imageRect = CGRect(x: 0, y: 0, width: nsImage.size.width, height: nsImage.size.height)
-    return nsImage.cgImage(forProposedRect: &imageRect, context: nil, hints: nil)
   }
   
   func getPixelColor(at point: CGPoint) -> (red: Float, green: Float, blue: Float)? {
@@ -86,4 +140,5 @@ class ImagePixelReader {
     
     return (red: color.x, green: color.y, blue: color.z)
   }
+  
 }
