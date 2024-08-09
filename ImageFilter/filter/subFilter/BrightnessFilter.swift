@@ -8,32 +8,15 @@
 import Foundation
 import MetalKit
 
-class BrightnessFilter: Filter {
-  let device: MTLDevice
-  let pipelineState: MTLComputePipelineState
+class BrightnessFilter: BaseFilter {
   var brightness: Float
   
   init(device: MTLDevice, brightness: Float) {
-    self.device = device
     self.brightness = brightness
-    
-    let library = device.makeDefaultLibrary()!
-    let kernelFunction = library.makeFunction(name: "adjustBrightness")!
-    self.pipelineState = try! device.makeComputePipelineState(function: kernelFunction)
+    super.init(device: device, kernelFunctionName: "adjustBrightness")
   }
   
-  func encode(commandEncoder: MTLComputeCommandEncoder, inputTexture: MTLTexture, outputTexture: MTLTexture) {
-    commandEncoder.setComputePipelineState(pipelineState)
-    commandEncoder.setTexture(inputTexture, index: 0)
-    commandEncoder.setTexture(outputTexture, index: 1)
+  override func setupCommandEncoder(commandEncoder: MTLComputeCommandEncoder) {
     commandEncoder.setBytes(&brightness, length: MemoryLayout<Float>.size, index: 0)
-    
-    let threadgroupSize = MTLSizeMake(16, 16, 1)
-    let threadgroupCount = MTLSizeMake(
-      (inputTexture.width + threadgroupSize.width - 1) / threadgroupSize.width,
-      (inputTexture.height + threadgroupSize.height - 1) / threadgroupSize.height,
-      1)
-    
-    commandEncoder.dispatchThreadgroups(threadgroupCount, threadsPerThreadgroup: threadgroupSize)
   }
 }
