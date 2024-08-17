@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC4A0CE42C70AD6C0024BF19 /* BaseFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4A0CE32C70AD6C0024BF19 /* BaseFilter.swift */; };
 		DC8259402C3ABD2E0080D980 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = DC82593F2C3ABD2E0080D980 /* Shaders.metal */; };
 		DC8259442C3AD0300080D980 /* Help.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8259432C3AD0300080D980 /* Help.swift */; };
 		DC8259462C3B65F90080D980 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8259452C3B65F90080D980 /* Filter.swift */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC4A0CE32C70AD6C0024BF19 /* BaseFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseFilter.swift; sourceTree = "<group>"; };
 		DC82593F2C3ABD2E0080D980 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		DC8259432C3AD0300080D980 /* Help.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Help.swift; sourceTree = "<group>"; };
 		DC8259452C3B65F90080D980 /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 		DC8259572C45148B0080D980 /* subFilter */ = {
 			isa = PBXGroup;
 			children = (
+				DC4A0CE32C70AD6C0024BF19 /* BaseFilter.swift */,
 				DC8259552C4514830080D980 /* SaturationFilter.swift */,
 				DC8259492C3ED2490080D980 /* BrightnessFilter.swift */,
 				DC82594B2C3ED4730080D980 /* AveragingGrayFilter.swift */,
@@ -206,6 +209,7 @@
 				DC8259442C3AD0300080D980 /* Help.swift in Sources */,
 				DC8259502C3ED4B70080D980 /* DesaturationGrayFilter.swift in Sources */,
 				DCFB3CE42C384CA4008B4F54 /* ImagePixelReader.swift in Sources */,
+				DC4A0CE42C70AD6C0024BF19 /* BaseFilter.swift in Sources */,
 				DC8259562C4514830080D980 /* SaturationFilter.swift in Sources */,
 				DC8259482C3ED1B70080D980 /* FilterChain.swift in Sources */,
 				DCFB3CD42C383924008B4F54 /* ImageFilterApp.swift in Sources */,
