@@ -125,3 +125,18 @@ kernel void adjustContrast(texture2d<float, access::read> inTexture [[texture(0)
     // 写入调整后的颜色，保持原始的 alpha 值
     outTexture.write(float4(adjustedColor, color.a), gid);
 }
+
+
+kernel void invertColors(texture2d<float, access::read> inTexture [[texture(0)]],
+                              texture2d<float, access::write> outTexture [[texture(1)]],
+                              uint2 gid [[thread_position_in_grid]]) {
+  if (gid.x >= inTexture.get_width() || gid.y >= inTexture.get_height()) {
+    return;
+  }
+  
+  float4 color = inTexture.read(gid);
+  color.r = 1.0 - color.r;
+  color.g = 1.0 - color.g;
+  color.b = 1.0 - color.b;
+  outTexture.write(color, gid);
+}

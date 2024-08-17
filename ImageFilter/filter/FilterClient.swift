@@ -24,6 +24,7 @@ class FilterClient {
   private var brightnessFilter: BrightnessFilter?
   private var saturationFilter: SaturationFilter?
   private var contrastFilter: ContrastFilter?
+  private var invertColorFilter: InvertColorFilter?
 
   init() {
     guard let device = MTLCreateSystemDefaultDevice() else {
@@ -131,6 +132,19 @@ class FilterClient {
     } else {
       if let desaturationFilter {
         filterChain.remove(filter: desaturationFilter)
+      }
+    }
+  }
+  
+  func toggleInvertColor(isOn: Bool) {
+    if isOn {
+      if invertColorFilter == nil {
+        invertColorFilter = InvertColorFilter(device: device)
+      }
+      filterChain.add(filter: invertColorFilter!)
+    } else {
+      if let invertColorFilter {
+        filterChain.remove(filter: invertColorFilter)
       }
     }
   }

@@ -16,7 +16,8 @@ struct ContentView: View {
   @State private var rgbValues: String = "RGB: N/A"
   @State private var position: NSPoint = .zero
   @State private var selectedGrayType: GrayType = .none
-  
+  @State private var invertColor: Bool = false
+
   private let imagePixelReader: ImagePixelReader = ImagePixelReader()
   private let filterClient = FilterClient()
 
@@ -66,6 +67,15 @@ struct ContentView: View {
               updateImage()
             }
           }
+          
+          HStack {
+            Text("InvertColor")
+            Toggle("", isOn: $invertColor)
+              .labelsHidden()
+          }
+          .onChange(of: invertColor) { _ in
+            updateImage()
+          }
         }
       }
       .listStyle(SidebarListStyle())
@@ -110,6 +120,7 @@ struct ContentView: View {
     filterClient.adjustBrightness(value: brightness)
     filterClient.adjustSaturation(value: saturation)
     filterClient.adjustContrast(value: contrast)
+    filterClient.toggleInvertColor(isOn: invertColor)
     if let newImage = filterClient.applyFilters() {
       image = newImage
     } else {
@@ -124,8 +135,7 @@ struct ContentView: View {
     panel.allowsMultipleSelection = false
     panel.canChooseDirectories = false
     panel.canChooseFiles = true
-    panel.allowedFileTypes = ["png", "jpg", "jpeg", "tiff"]
-    
+    panel.allowedContentTypes = [.png, .jpeg, .tiff]
     if panel.runModal() == .OK {
       if let url = panel.url {
         image = NSImage(contentsOf: url)

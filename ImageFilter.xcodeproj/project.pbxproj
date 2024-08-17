@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DC4A0CE42C70AD6C0024BF19 /* BaseFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4A0CE32C70AD6C0024BF19 /* BaseFilter.swift */; };
+		DC4A0CE62C7105790024BF19 /* InvertColorFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4A0CE52C7105790024BF19 /* InvertColorFilter.swift */; };
 		DC8259402C3ABD2E0080D980 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = DC82593F2C3ABD2E0080D980 /* Shaders.metal */; };
 		DC8259442C3AD0300080D980 /* Help.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8259432C3AD0300080D980 /* Help.swift */; };
 		DC8259462C3B65F90080D980 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8259452C3B65F90080D980 /* Filter.swift */; };
@@ -29,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		DC4A0CE32C70AD6C0024BF19 /* BaseFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseFilter.swift; sourceTree = "<group>"; };
+		DC4A0CE52C7105790024BF19 /* InvertColorFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvertColorFilter.swift; sourceTree = "<group>"; };
 		DC82593F2C3ABD2E0080D980 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		DC8259432C3AD0300080D980 /* Help.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Help.swift; sourceTree = "<group>"; };
 		DC8259452C3B65F90080D980 /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 				DC82594D2C3ED49A0080D980 /* LuminanceGrayFilter.swift */,
 				DC82594F2C3ED4B70080D980 /* DesaturationGrayFilter.swift */,
 				DC8259582C45640B0080D980 /* ContrastFilter.swift */,
+				DC4A0CE52C7105790024BF19 /* InvertColorFilter.swift */,
 			);
 			path = subFilter;
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 				DC82594A2C3ED2490080D980 /* BrightnessFilter.swift in Sources */,
 				DC8259462C3B65F90080D980 /* Filter.swift in Sources */,
 				DC8259442C3AD0300080D980 /* Help.swift in Sources */,
+				DC4A0CE62C7105790024BF19 /* InvertColorFilter.swift in Sources */,
 				DC8259502C3ED4B70080D980 /* DesaturationGrayFilter.swift in Sources */,
 				DCFB3CE42C384CA4008B4F54 /* ImagePixelReader.swift in Sources */,
 				DC4A0CE42C70AD6C0024BF19 /* BaseFilter.swift in Sources */,
