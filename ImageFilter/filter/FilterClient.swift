@@ -25,6 +25,7 @@ class FilterClient {
   private var saturationFilter: SaturationFilter?
   private var contrastFilter: ContrastFilter?
   private var invertColorFilter: InvertColorFilter?
+  private var thresholdFilter: ThresholdFilter?
 
   init() {
     guard let device = MTLCreateSystemDefaultDevice() else {
@@ -147,6 +148,23 @@ class FilterClient {
         filterChain.remove(filter: invertColorFilter)
       }
     }
+  }
+  
+  func adjustThreshold(value: Float, thresholdEnable: Bool) {
+    if !thresholdEnable {
+      if let thresholdFilter {
+        filterChain.remove(filter: thresholdFilter)
+        self.thresholdFilter = nil
+      }
+      return
+    }
+    
+    if thresholdFilter == nil {
+      thresholdFilter = ThresholdFilter(device: device, threshold: value)
+      filterChain.add(filter: thresholdFilter)
+    }
+    
+    thresholdFilter?.threshold = value
   }
   
   func applyFilters() -> NSImage? {

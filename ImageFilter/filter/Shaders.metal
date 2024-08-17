@@ -140,3 +140,21 @@ kernel void invertColors(texture2d<float, access::read> inTexture [[texture(0)]]
   color.b = 1.0 - color.b;
   outTexture.write(color, gid);
 }
+
+
+kernel void threshold(texture2d<float, access::read> inTexture [[texture(0)]],
+                      texture2d<float, access::write> outTexture [[texture(1)]],
+                      constant float &threshold [[buffer(0)]],
+                      uint2 gid [[thread_position_in_grid]])
+{
+  if (gid.x >= outTexture.get_width() || gid.y >= outTexture.get_height()) {
+    return;
+  }
+  
+  float4 color = inTexture.read(gid);
+  
+  float intensity = dot(color.rgb, float3(0.299, 0.587, 0.114));
+  float3 result = step(threshold, intensity);
+  color = float4(result, color.a);
+  outTexture.write(color, gid);
+}

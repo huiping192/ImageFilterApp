@@ -17,6 +17,8 @@ struct ContentView: View {
   @State private var position: NSPoint = .zero
   @State private var selectedGrayType: GrayType = .none
   @State private var invertColor: Bool = false
+  @State private var threshold: Float = 0.5
+  @State private var thresholdEnable: Bool = false
 
   private let imagePixelReader: ImagePixelReader = ImagePixelReader()
   private let filterClient = FilterClient()
@@ -76,6 +78,21 @@ struct ContentView: View {
           .onChange(of: invertColor) { _ in
             updateImage()
           }
+          
+          VStack(alignment: .leading) {
+            HStack {
+              Text("Threshold: \(threshold, specifier: "%.2f")")
+              Toggle("", isOn: $thresholdEnable)
+                .labelsHidden()
+                .onChange(of: thresholdEnable) { _ in
+                  updateImage()
+                }
+            }
+            Slider(value: $threshold, in: 0...1, step: 0.01)
+              .onChange(of: threshold) { _ in
+                updateImage()
+              }
+          }
         }
       }
       .listStyle(SidebarListStyle())
@@ -121,6 +138,7 @@ struct ContentView: View {
     filterClient.adjustSaturation(value: saturation)
     filterClient.adjustContrast(value: contrast)
     filterClient.toggleInvertColor(isOn: invertColor)
+    filterClient.adjustThreshold(value: threshold, thresholdEnable: thresholdEnable)
     if let newImage = filterClient.applyFilters() {
       image = newImage
     } else {
