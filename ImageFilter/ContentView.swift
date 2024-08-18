@@ -90,7 +90,7 @@ struct ContentView: View {
                 }
             }
             Slider(value: $threshold, in: 0...1, step: 0.01)
-              .onChange(of: threshold) { _ in
+              .onChange(of: threshold) {
                 updateImage()
               }
           }
