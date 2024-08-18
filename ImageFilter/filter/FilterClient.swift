@@ -26,7 +26,8 @@ class FilterClient {
   private var contrastFilter: ContrastFilter?
   private var invertColorFilter: InvertColorFilter?
   private var thresholdFilter: ThresholdFilter?
-
+  private var gaussianBlurFilter: GaussianBlurFilter?
+  
   init() {
     guard let device = MTLCreateSystemDefaultDevice() else {
       fatalError("Metal is not supported on this device")
@@ -165,6 +166,16 @@ class FilterClient {
     }
     
     thresholdFilter?.threshold = value
+  }
+  
+  func adjustGaussianBlur(value: Float) {
+    
+    if gaussianBlurFilter == nil {
+      gaussianBlurFilter = GaussianBlurFilter(device: device, radius: value)
+      filterChain.add(filter: gaussianBlurFilter)
+    }
+    
+    gaussianBlurFilter?.radius = value
   }
   
   func applyFilters() -> NSImage? {

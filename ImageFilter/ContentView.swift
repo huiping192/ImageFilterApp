@@ -19,7 +19,8 @@ struct ContentView: View {
   @State private var invertColor: Bool = false
   @State private var threshold: Float = 0.5
   @State private var thresholdEnable: Bool = false
-
+  @State private var gaussianBlur: Float = 0
+  
   private let imagePixelReader: ImagePixelReader = ImagePixelReader()
   private let filterClient = FilterClient()
 
@@ -93,6 +94,14 @@ struct ContentView: View {
                 updateImage()
               }
           }
+          
+          VStack(alignment: .leading) {
+            Text("GaussianBlur: \(gaussianBlur, specifier: "%.2f")")
+            Slider(value: $gaussianBlur, in: 0...25, step: 1)
+              .onChange(of: gaussianBlur) { _ in
+                updateImage()
+              }
+          }
         }
       }
       .listStyle(SidebarListStyle())
@@ -139,6 +148,7 @@ struct ContentView: View {
     filterClient.adjustContrast(value: contrast)
     filterClient.toggleInvertColor(isOn: invertColor)
     filterClient.adjustThreshold(value: threshold, thresholdEnable: thresholdEnable)
+    filterClient.adjustGaussianBlur(value: gaussianBlur)
     if let newImage = filterClient.applyFilters() {
       image = newImage
     } else {
