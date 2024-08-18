@@ -37,7 +37,7 @@ struct ContentView: View {
           VStack(alignment: .leading) {
             Text("Brightness: \(brightness, specifier: "%.2f")")
             Slider(value: $brightness, in: -1...1, step: 0.01)
-              .onChange(of: brightness) { _ in
+              .onChange(of: brightness) {
                 updateImage()
               }
           }
@@ -45,7 +45,7 @@ struct ContentView: View {
           VStack(alignment: .leading) {
             Text("Saturation: \(saturation, specifier: "%.2f")")
             Slider(value: $saturation, in: 0...2, step: 0.01)
-              .onChange(of: saturation) { _ in
+              .onChange(of: saturation) {
                 updateImage()
               }
           }
@@ -53,7 +53,7 @@ struct ContentView: View {
           VStack(alignment: .leading) {
             Text("Contrast: \(contrast, specifier: "%.2f")")
             Slider(value: $contrast, in: -1...1, step: 0.01)
-              .onChange(of: contrast) { _ in
+              .onChange(of: contrast) {
                 updateImage()
               }
           }
@@ -66,7 +66,7 @@ struct ContentView: View {
               }
             }
             .pickerStyle(RadioGroupPickerStyle())
-            .onChange(of: selectedGrayType) { _ in
+            .onChange(of: selectedGrayType) {
               updateImage()
             }
           }
@@ -76,7 +76,7 @@ struct ContentView: View {
             Toggle("", isOn: $invertColor)
               .labelsHidden()
           }
-          .onChange(of: invertColor) { _ in
+          .onChange(of: invertColor) {
             updateImage()
           }
           
@@ -85,7 +85,7 @@ struct ContentView: View {
               Text("Threshold: \(threshold, specifier: "%.2f")")
               Toggle("", isOn: $thresholdEnable)
                 .labelsHidden()
-                .onChange(of: thresholdEnable) { _ in
+                .onChange(of: thresholdEnable) {
                   updateImage()
                 }
             }
@@ -98,7 +98,7 @@ struct ContentView: View {
           VStack(alignment: .leading) {
             Text("GaussianBlur: \(gaussianBlur, specifier: "%.2f")")
             Slider(value: $gaussianBlur, in: 0...25, step: 1)
-              .onChange(of: gaussianBlur) { _ in
+              .onChange(of: gaussianBlur) {
                 updateImage()
               }
           }
@@ -120,7 +120,7 @@ struct ContentView: View {
               MouseTrackingNSView(position: $position)
                 .background(Color.clear)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }.onChange(of: position) { newPosition in
+            }.onChange(of: position) { _, newPosition in
               let convertedPosition = convertMousePosition(newPosition, in: geometry.size, for: image)
               
               if let pixelColor = imagePixelReader.getPixelColor(at: convertedPosition, useGPU: false) {
