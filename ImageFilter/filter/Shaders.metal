@@ -216,3 +216,60 @@ kernel void gaussianBlur(texture2d<float, access::read> inTexture [[texture(0)]]
   // 写入结果到输出纹理
   outTexture.write(finalColor, gid);
 }
+
+
+
+kernel void sharpen(texture2d<float, access::read> inTexture [[texture(0)]],
+                    texture2d<float, access::write> outTexture [[texture(1)]],
+                    constant float &strength [[buffer(0)]],
+                    uint2 gid [[thread_position_in_grid]])
+{
+  
+  
+  // 检查是否超出纹理边界
+  if (gid.x >= outTexture.get_width() || gid.y >= outTexture.get_height()) {
+    return;
+  }
+  
+  float4 sum = float4(0.0);
+  // 定义卷积核的常量值
+  float CENTER_WEIGHT = 5.0;
+  float ADJACENT_WEIGHT = -1.0;
+  float DIAGONAL_WEIGHT = 0.0;
+  
+  // 应用3x3卷积核
+  for (int offsetY = -1; offsetY <= 1; offsetY++) {
+    for (int offsetX = -1; offsetX <= 1; offsetX++) {
+      uint2 samplePos = uint2(gid.x + offsetX, gid.y + offsetY);
+      
+      // 确保采样位置在纹理范围内
+      samplePos = clamp(samplePos, uint2(0, 0), uint2(inTexture.get_width() - 1, inTexture.get_height() - 1));
+      
+      // 读取像素颜色
+      float4 color = inTexture.read(samplePos);
+      
+      // 应用卷积核权重
+      float weight;
+      if (offsetX == 0 && offsetY == 0) {
+        weight = CENTER_WEIGHT;
+      } else if (abs(offsetX) + abs(offsetY) == 1) {
+        weight = ADJACENT_WEIGHT;
+      } else {
+        weight = DIAGONAL_WEIGHT;
+      }
+      sum += color * weight;
+    }
+  }
+  
+  // 读取原始中心像素颜色
+  float4 originalColor = inTexture.read(gid);
+  
+  // 根据强度参数混合原始颜色和锐化后的颜色
+  float4 sharpened = mix(originalColor, sum, strength);
+  
+  // 确保颜色分量在 [0, 1] 范围内
+  sharpened = clamp(sharpened, 0.0, 1.0);
+  
+  // 写入结果到输出纹理
+  outTexture.write(sharpened, gid);
+}

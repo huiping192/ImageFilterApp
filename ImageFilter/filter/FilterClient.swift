@@ -27,7 +27,8 @@ class FilterClient {
   private var invertColorFilter: InvertColorFilter?
   private var thresholdFilter: ThresholdFilter?
   private var gaussianBlurFilter: GaussianBlurFilter?
-  
+  private var sharpenFilter: SharpenFilter?
+
   init() {
     guard let device = MTLCreateSystemDefaultDevice() else {
       fatalError("Metal is not supported on this device")
@@ -176,6 +177,15 @@ class FilterClient {
     }
     
     gaussianBlurFilter?.radius = value
+  }
+  
+  func adjustSharpen(value: Float) {
+    if sharpenFilter == nil {
+      sharpenFilter = SharpenFilter(device: device, strength: value)
+      filterChain.add(filter: sharpenFilter)
+    }
+    
+    sharpenFilter?.strength = value
   }
   
   func applyFilters() -> NSImage? {

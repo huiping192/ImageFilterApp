@@ -20,7 +20,8 @@ struct ContentView: View {
   @State private var threshold: Float = 0.5
   @State private var thresholdEnable: Bool = false
   @State private var gaussianBlur: Float = 0
-  
+  @State private var sharpen: Float = 0
+
   private let imagePixelReader: ImagePixelReader = ImagePixelReader()
   private let filterClient = FilterClient()
 
@@ -102,6 +103,14 @@ struct ContentView: View {
                 updateImage()
               }
           }
+          
+          VStack(alignment: .leading) {
+            Text("Sharpen: \(sharpen, specifier: "%.2f")")
+            Slider(value: $sharpen, in: 0...1, step: 0.01)
+              .onChange(of: sharpen) {
+                updateImage()
+              }
+          }
         }
       }
       .listStyle(SidebarListStyle())
@@ -149,6 +158,8 @@ struct ContentView: View {
     filterClient.toggleInvertColor(isOn: invertColor)
     filterClient.adjustThreshold(value: threshold, thresholdEnable: thresholdEnable)
     filterClient.adjustGaussianBlur(value: gaussianBlur)
+    filterClient.adjustSharpen(value: sharpen)
+
     if let newImage = filterClient.applyFilters() {
       image = newImage
     } else {
